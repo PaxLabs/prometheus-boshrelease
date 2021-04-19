@@ -583,7 +583,33 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
-      }
+      },
+      {
+        "allValue": null,
+        "current": {
+          "tags": [],
+          "text": "control-plane",
+          "value": "control-plane"
+        },
+        "datasource": "${DS_PROMETHEUS}",
+        "definition": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Job",
+        "multi": false,
+        "name": "job",
+        "options": [],
+        "query": "label_values(concourse_builds_finished{bosh_deployment=~\"$bosh_deployment\", pipeline=~\"$pipeline\"}, exported_job)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }    
     ]
   },
   "time": {
