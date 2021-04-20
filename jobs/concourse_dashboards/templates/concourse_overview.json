@@ -792,12 +792,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(  #over the concourse node reporting counters\n  concourse_builds_started_total{bosh_deployment=~\"$bosh_deployment\"} \n  - concourse_builds_finished_total{bosh_deployment=~\"$bosh_deployment\"}\n) \n\nby(bosh_deployment)",
+          "expr": "max(concourse_builds_running{bosh_deployment=~\"$bosh_deployment\"} \n) \n\nby(bosh_deployment)",
           "format": "time_series",
           "hide": false,
           "instant": false,
           "intervalFactor": 2,
-          "legendFormat": "Pending",
+          "legendFormat": "Running",
           "refId": "C"
         }
       ],
@@ -805,7 +805,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Started - Finished Builds",
+      "title": "Builds Running",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1117,6 +1117,188 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_PROMETHEUS}",
+      "description": "Current number of open file descriptors",
+      "fill": 1,
+      "id": 99,
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "max(process_open_fds{bosh_deployment=~\"$bosh_deployment\"}) by(bosh_deployment, instance)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}",
+          "refId": "A",
+          "step": 120
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Open File Descriptors by worker",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_PROMETHEUS}",
+      "description": "CPU seconds used",
+      "fill": 1,
+      "id": 98,
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(process_cpu_seconds_total{bosh_deployment=~\"$bosh_deployment\"}[2m])) by(bosh_deployment, instance)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "CPU seconds",
+          "refId": "A",
+          "step": 120
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU used per worker",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Recent number of Concourse database queries",
       "fill": 1,
       "gridPos": {
@@ -1149,7 +1331,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "#Concourse 3\nmax(concourse_db_queries{bosh_deployment=~\"$bosh_deployment\"}) by(bosh_deployment)",
+          "expr": "#Concourse 3\nrate(concourse_db_queries{bosh_deployment=~\"$bosh_deployment\"}[2m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Queries",
@@ -1157,7 +1339,7 @@
           "step": 120
         },
         {
-          "expr": "#Concourse 5\nmax(concourse_db_queries_total{bosh_deployment=~\"$bosh_deployment\"}) by(bosh_deployment)",
+          "expr": "#Concourse 5\nrate(concourse_db_queries_total{bosh_deployment=~\"$bosh_deployment\"}[2m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Queries",
@@ -1305,7 +1487,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 29
       },
       "id": 19,
       "legend": {
@@ -1418,7 +1600,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 35
       },
       "id": 21,
       "links": [],
