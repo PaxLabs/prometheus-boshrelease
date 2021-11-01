@@ -220,3 +220,10 @@ properties:
   cloudfoundry_alerts.metric_received_too_old.evaluation_time:
     description: "Last Metric Received too old alert evaluation time"
     default: 5m
+
+  cloudfoundry_alerts.router_bad_response_ratio.threshold:
+    description: "Bad Response Ratio Threshold"
+    default: 0.1
+  cloudfoundry_alerts.router_bad_response_ratio.evaluation_time:
+    description: "Bad Response Ratio evaluation time"
+    default: 20m

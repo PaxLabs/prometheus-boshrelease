@@ -73,6 +73,16 @@ groups:
           summary: "5xx responses per second at CF `{{$labels.environment}}/{{$labels.bosh_deployment}}` is too high: {{$value}} 5xx res/s"
           description: "Routers at CF `{{$labels.environment}}/{{$labels.bosh_deployment}}` have been returning {{$value}} 5xx responses per second during the last <%= p('cloudfoundry_alerts.router_5xx_responses.evaluation_time') %>"
 
+      - alert: CFRouterBadResponseRatioTooHigh
+        expr: max((firehose_counter_event_gorouter_responses_4_xx_delta + firehose_counter_event_gorouter_responses_5_xx_delta) / (firehose_counter_event_gorouter_responses_2_xx_delta + firehose_counter_event_gorouter_responses_3_xx_delta + firehose_counter_event_gorouter_responses_4_xx_delta + firehose_counter_event_gorouter_responses_5_xx_delta)) by(environment, bosh_deployment) > <%= p('cloudfoundry_alerts.router_bad_response_ratio.threshold') %>
+        for: <%= p('cloudfoundry_alerts.router_bad_response_ratio.evaluation_time') %>
+        labels:
+          service: cf
+          severity: warning
+        annotations:
+          summary: "Ratio of responses at `{{$labels.environment}}/{{$labels.bosh_deployment}}` in 4xx and 5xx range is too high: {{$value}}%"
+          description: "Routers at CF `{{$labels.environment}}/{{$labels.bosh_deployment}}` have been returning a ratio of {{$value}} bad responses during the last <%= p('cloudfoundry_alerts.router_bad_response_ratio.evaluation_time') %>"
+
       - alert: CFRoutesTooLow
         expr: avg(firehose_value_metric_gorouter_total_routes) by(environment, bosh_deployment) < <%= p('cloudfoundry_alerts.routes_total.threshold') %>
         for: <%= p('cloudfoundry_alerts.routes_total.evaluation_time') %>
